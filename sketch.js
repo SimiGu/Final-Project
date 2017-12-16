@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+var ball1,ball2;
+=======
+<<<<<<< HEAD
 <<<<<<< HEAD
 var ball1,ball2;
 =======
@@ -7,12 +10,16 @@ var ball;
 =======
 var ball;
 >>>>>>> 5df3ebfc9aae0be76001dc152aa9b14515284500
+>>>>>>> 306c3e0f44cc21b3f81517b9097d7a92f52e73fb
 var otherballs;
 var platform;
 var ladder;
 var gravity=0.5;
 <<<<<<< HEAD
+=======
 <<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> 306c3e0f44cc21b3f81517b9097d7a92f52e73fb
 var scene=1;
 var posx=500;
 var posy;
@@ -97,6 +104,11 @@ function setup(){
 	// 	other.mass=other.scale;
 	// 	otherballs.add(other);
 	// }
+<<<<<<< HEAD
+}
+
+function draw(){
+=======
 =======
 =======
 >>>>>>> 5df3ebfc9aae0be76001dc152aa9b14515284500
@@ -141,6 +153,7 @@ function setup(){
 function draw(){
 <<<<<<< HEAD
 <<<<<<< HEAD
+>>>>>>> 306c3e0f44cc21b3f81517b9097d7a92f52e73fb
 //start from dark
 	if(frameCount<100){
 		background(0);	
@@ -310,6 +323,8 @@ if(ball2.overlapPixel(tie.position.x,tie.position.y-60)){
 //test scenes
 function mousePressed(){
 	scene++;
+<<<<<<< HEAD
+=======
 =======
 =======
 >>>>>>> 5df3ebfc9aae0be76001dc152aa9b14515284500
@@ -390,4 +405,5 @@ var s=otherballs[i];
 >>>>>>> 5df3ebfc9aae0be76001dc152aa9b14515284500
 =======
 >>>>>>> 5df3ebfc9aae0be76001dc152aa9b14515284500
+>>>>>>> 306c3e0f44cc21b3f81517b9097d7a92f52e73fb
 }
