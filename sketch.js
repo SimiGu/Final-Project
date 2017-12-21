@@ -1,3 +1,6 @@
+//change bgm
+//add sound effects
+//change losing text
 var ball1, ball2, ball3;
 var otherballs;
 var platform;
@@ -35,20 +38,21 @@ function preload() {
 	//text
 	font = loadFont("assets/font.otf");
 	//sound
-	bgm = loadSound("assets/sound/bgm.mp3");
-	match = loadSound("assets/sound/match.wav");
-	// crown = loadSound("assets/sound/crown.wav");
-	// die = loadSound("assets/sound/die.wav");
-	// money = loadSound("assets/sound/money.wav");
-	// pushball = loadSound("assets/sound/push.wav");
-	// wrench = loadSound("assets/sound/wrench.wav");
-	// wrench_drop = loadSound("assets/sound/wrench_drop.wav");
+	bgm = loadSound("assets/sound/bgm.mp3");//change to more glooming music after feedback
+	matchsound = loadSound("assets/sound/match.wav");
+	crownsound = loadSound("assets/sound/crown.wav");
+	diesound = loadSound("assets/sound/die.wav");
+	moneysound = loadSound("assets/sound/money.wav");
+	pushballsound = loadSound("assets/sound/push.wav");
+	tiesound=loadSound("assets/sound/tie.wav");
+	wrenchsound = loadSound("assets/sound/wrench.wav");
+	wrench_dropsound = loadSound("assets/sound/wrench_drop.wav");
 }
 
 function setup() {
 	createCanvas(800, 450);
 	//text
-	string = "YOU DIED";
+	string = "YOU WILL NEVER BE AN UPPER CLASS";
 	//draw rocks randomly, constrain them on the ground and after puddle
 	for (var i = 0; i < 20; i++) {
 		rocks[i] = new Rock(random(200, 800), random(280, 420));
@@ -79,7 +83,7 @@ function setup() {
 	ladder = createSprite(800, -196);
 	ladder.addImage(loadImage("assets/ladder.png"));
 	ladder.setCollider("rectangle", 0, 0, 0, 0);
-	//ladder.debug = true;
+	ladder.debug = true;
 	//ladder in scene2
 	ladder2 = createSprite(400, 560);
 	ladder2.addImage(loadImage("assets/ladder.png"));
@@ -103,7 +107,6 @@ function setup() {
 	//main character in scene1
 	ball1 = createSprite(0, 300);
 	ball1.addAnimation("normal", "assets/ball_normal0001.png", "assets/ball_normal0004.png");
-	ball1.addAnimation("fall", "assets/ball_ground0001.png", "assets/ball_ground0004.png");
 	ball1.setCollider("circle", 0, 0, 75);
 	//ball1.debug = true;
 	//main character in scene2;
@@ -142,15 +145,24 @@ function setup() {
 	moneyblock.setCollider("rectangle", 0, 0, 844, 112);
 	crown = createSprite(1600, 100);
 	crown.addAnimation("normal", "assets/crown0001.png", "assets/crown0004.png");
-	match.play();
-	bgm.play();
+	// match.play();
+	// bgm.play();
 }
 
 function draw() {
 	//start from dark
+	//match sound come out first, be louder
 	if (frameCount < 30) {
 		background(0);
+		matchsound.setVolume(5);
+		if(!matchsound.isPlaying())
+			matchsound.play();
+
+
 	} else {
+		bgm.setVolume(.5);
+		if(!bgm.isPlaying())
+			bgm.play();
 		//scene1
 		if (scene === 1) {
 			background(255);
@@ -176,7 +188,7 @@ function draw() {
 			}
 			//press space to jump
 			if (keyWentDown("space")) {
-				ball1.velocity.y = -6;
+				ball1.velocity.y = -5;
 			}
 			//press left and right arrow to move
 			if (keyIsDown(LEFT_ARROW)) ball1.position.x -= 5;
@@ -189,6 +201,10 @@ function draw() {
 			//get wrench(move with ball)
 			if (ball1.overlapPoint(wrench.position.x, wrench.position.y)) {
 				wrench.changeAnimation("still");
+	
+		    if(!wrenchsound.isPlaying())
+		    	wrenchsound.play();
+
 				//rotate and fixed on ball
 				wrench.rotation = -40;
 				wrench.position.x = ball1.position.x + 55;
@@ -226,11 +242,10 @@ function draw() {
 			//condition to go to scene 2, climb to top of the ladder
 			if (ball1.position.x > 675 && ball1.position.x < 925 && ball1.position.y < -50) 
 				scene = 2;
-			if (ball1.position.y > 500) 
-				scene = 4;
+
 		}
 		if (scene === 2) {
-			ball1.remove();
+			//ball1.remove();
 			background(255);
 			drawSprite(ladder2);
 			drawSprites(otherties);
@@ -258,6 +273,8 @@ function draw() {
 			}
 			if (ball2.collide(blocks)) {
 				ball2.velocity.y = 0;
+				if(!moneysound.isPlaying())
+		    	moneysound.play();
 			}
 			//ball control
 			if (keyWentDown("space")) {
@@ -275,9 +292,12 @@ function draw() {
 			//reach tie, change to middle class
 			if (ball2.overlap(tie)) {
 				tie.animation.play();
+				if(!tiesound.isPlaying())
+		    	tiesound.play();
 				//tie.changeAnimation("rotate");
 			} else {
 				tie.animation.goToFrame(0);
+				tiesound.stop();
 			}
 			//what happen after getting the tie
 			if (ball2.overlapPixel(tie.position.x, tie.position.y - 60)) {
@@ -289,6 +309,8 @@ function draw() {
 				wrench2.setCollider("rectangle", 0, 0, 0, 0);
 				wrench2.velocity.y += 1;
 				wrench2.velocity.x = 3;
+				if(!wrench_dropsound.isPlaying())
+		    	wrench_dropsound.play();
 				//money block raise
 				blocksraise = true;
 			}
@@ -302,7 +324,8 @@ function draw() {
 			}
 		}
 		//print(ball2.position.y);
-		if (ball2.position.x > 1800 && ball2.position.y < -20) scene = 3;
+		if (ball2.position.x > 1800 && ball2.position.y < -20) 
+			scene = 3;
 		//gameover
 		if (ball2.position.y > 500) 
 			scene = 4;
@@ -323,7 +346,13 @@ function draw() {
 		}
 		//push
 		otherballs.displace(otherballs);
-		ball3.displace(otherballs);
+		if(ball3.displace(otherballs)){
+			pushballsound.setVolume(5);
+			if(!pushballsound.isPlaying())
+		    	pushballsound.play();
+			}else{
+				pushballsound.stop();
+			}
 		drawSprite(money);
 		drawSprite(moneyblock);
 		drawSprite(crown);
@@ -340,28 +369,42 @@ function draw() {
 			ball3.velocity.y = 0;
 		}
 		//press space to jump
-		if (keyDown("space")) ball3.velocity.y = -2;
+		if (keyWentDown("space")) 
+			ball3.velocity.y = -5;
 		//press left and right arrow to move
-		if (keyIsDown(LEFT_ARROW)) ball3.position.x -= 5;
-		if (keyIsDown(RIGHT_ARROW)) ball3.position.x += 5;
+		if (keyIsDown(LEFT_ARROW)) 
+			ball3.position.x -= 5;
+		if (keyIsDown(RIGHT_ARROW)) 
+			ball3.position.x += 5;
 		//after getting the crown, become upper class
+		
 		if (ball3.overlapPixel(crown.position.x, crown.position.y)) {
-			ball3.velocity.y = 5;
-			ball3.changeAnimation("crown");
+			//drop
 			crown.remove();
+			crownsound.setVolume(5);
+			if(!crownsound.isPlaying())
+		    	crownsound.play();
+			ball3.velocity.y = 20;
+			ball3.changeAnimation("crown");
+
 		}
-		if (ball3.position.y > 500){
+
+			if (ball3.position.y > 500)
 			scene = 4;
-		}
+
 	}
 	//gameover interface
 	if (scene === 4) {
+		var textposX=20;
+		var textposY=height/2;
 		background(0);
 		fill(255);
-		textFont(font, 50);
-		text(string, width / 2, height / 2);
-		//bgm.stop();
-	}
+		textFont(font, 30);
+		text(string, textposX,textposY);
+		camera.position.x=width/2;
+		bgm.setVolume(5);
+}
+	
 }
 //test
 // function mousePressed() {
